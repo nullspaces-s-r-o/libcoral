@@ -87,7 +87,7 @@ class SoftmaxRegressionModel {
       const tflite::Model& embedding_extractor_model,
       flatbuffers::FlatBufferBuilder* fbb) const;
 
- private:
+ public:
   // Calculates the loss of the current model for the given data, using a
   // cross-entropy loss function.
   // Inputs: tensor mat_x of size NxD of input data (image embeddings) to test

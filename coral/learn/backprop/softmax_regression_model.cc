@@ -154,7 +154,7 @@ void SoftmaxRegressionModel::Train(const TrainingData& data,
 void SoftmaxRegressionModel::AppendLayersToEmbeddingExtractor(
     const tflite::Model& embedding_extractor_model,
     flatbuffers::FlatBufferBuilder* fbb) const {
-  LOG(INFO) << "Logit min: " << logit_min_ << ", max: " << logit_max_;
+  // LOG(INFO) << "Logit min: " << logit_min_ << ", max: " << logit_max_;
   CHECK_EQ(AppendFullyConnectedAndSoftmaxLayerToModel(embedding_extractor_model,
                                                       fbb, mat_w_, vec_b_,
                                                       logit_min_, logit_max_),
