@@ -38,7 +38,7 @@ limitations under the License.
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/model_builder.h"
 #include "tensorflow/lite/stateful_error_reporter.h"
-#include "tflite/public/edgetpu.h"
+#include "edgetpu.h"
 
 namespace coral {
 
