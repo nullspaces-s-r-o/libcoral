@@ -28,16 +28,16 @@ limitations under the License.
 
 namespace coral {
 namespace {
-TfLiteFloatArray* TfLiteFloatArrayCopy(const TfLiteFloatArray* src) {
-  if (!src) return nullptr;
+// TfLiteFloatArray* TfLiteFloatArrayCopy(const TfLiteFloatArray* src) {
+//   if (!src) return nullptr;
 
-  auto* copy = static_cast<TfLiteFloatArray*>(
-      malloc(TfLiteFloatArrayGetSizeInBytes(src->size)));
-  CHECK(copy);
-  copy->size = src->size;
-  std::memcpy(copy->data, src->data, src->size * sizeof(float));
-  return copy;
-}
+//   auto* copy = static_cast<TfLiteFloatArray*>(
+//       malloc(TfLiteFloatArrayGetSizeInBytes(src->size)));
+//   CHECK(copy);
+//   copy->size = src->size;
+//   std::memcpy(copy->data, src->data, src->size * sizeof(float));
+//   return copy;
+// }
 
 TfLiteAffineQuantization* TfLiteAffineQuantizationCopy(
     const TfLiteAffineQuantization* src) {
@@ -142,6 +142,7 @@ std::shared_ptr<edgetpu::EdgeTpuContext> GetEdgeTpuContext(
     absl::optional<DeviceType> device_type, absl::optional<int> device_index,
     const edgetpu::EdgeTpuManager::DeviceOptions& options) {
   auto* manager = edgetpu::EdgeTpuManager::GetSingleton();
+  manager->SetVerbosity(1);
   if (!device_index.has_value()) {
     return device_type.has_value() ? manager->OpenDevice(device_type.value())
                                    : manager->OpenDevice();
@@ -149,6 +150,8 @@ std::shared_ptr<edgetpu::EdgeTpuContext> GetEdgeTpuContext(
     const int index = device_index.value();
     CHECK_GE(index, 0);
     auto tpus = manager->EnumerateEdgeTpu();
+    LOG(INFO) << "Number of Edge TPU devices: " << tpus.size();
+    
     if (device_type.has_value()) {
       int i = 0;
       for (auto& record : tpus)
@@ -156,6 +159,8 @@ std::shared_ptr<edgetpu::EdgeTpuContext> GetEdgeTpuContext(
           return manager->OpenDevice(record.type, record.path, options);
     } else {
       if (index < tpus.size())
+        LOG(INFO) << "Opening Edge TPU device " << index << ": "
+                  << tpus[index].type << " @ " << tpus[index].path;
         return manager->OpenDevice(tpus[index].type, tpus[index].path, options);
     }
     return nullptr;
